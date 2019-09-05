@@ -19,6 +19,10 @@ namespace AssetBundles {
 
         public abstract AssetBundleLoadAssetOperation LoadAssetAsync<T>(string bundle, string asset) where T : UnityEngine.Object;
 
+        public abstract AssetBundleLoadAssetOperation LoadAssetAsync(string bundle, string asset, System.Type type);
+
+        public virtual void UnloadBundle(string bundle, bool unloadAllLoadedObjects, bool force) { }
+
         public abstract void Dispose();
 
         public void AddVariant(string variant) {

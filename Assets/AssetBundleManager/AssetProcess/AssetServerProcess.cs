@@ -21,6 +21,10 @@ namespace AssetBundles {
 
         public override AssetBundleLoadAssetOperation LoadAssetAsync<T>(string bundle, string asset) => new LoadAssetOperation(RemapVariant(bundle), asset, typeof(T), abm);
 
+        public override AssetBundleLoadAssetOperation LoadAssetAsync(string bundle, string asset, Type type) => new LoadAssetOperation(RemapVariant(bundle), asset, type, abm);
+
+        public override void UnloadBundle(string bundle, bool unloadAllLoadedObjects, bool force) => abm.UnloadBundle(bundle, unloadAllLoadedObjects, force);
+
         public override void Dispose() {
             abm.Dispose();
             abm = null;
