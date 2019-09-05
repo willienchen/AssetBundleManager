@@ -20,9 +20,7 @@ namespace AssetBundles {
             return new Simulation.LoadLevelOperation(RemapVariant(bundle), level, mode);
         }
 
-        //讀取素材
-        public override AssetBundleLoadAssetOperation LoadAssetAsync<T>(string bundle, string asset) {
-
+        public override AssetBundleLoadAssetOperation LoadAssetAsync(string bundle, string asset, System.Type type) {
             string[] assetPaths = AssetBundleBuildMap.GetBuildMap().GetAssetPathsFromAssetBundleAndAssetName(RemapVariant(bundle), asset);
 
             if (assetPaths.Length == 0) {
@@ -32,14 +30,19 @@ namespace AssetBundles {
 
             Object target;
             for (int i = 0; i < assetPaths.Length; i++) {
-                target = AssetDatabase.LoadAssetAtPath(assetPaths[i], typeof(T));
+                target = AssetDatabase.LoadAssetAtPath(assetPaths[i], type);
                 if (target != null) {
                     return new Simulation.LoadAssetOperation(target);
                 }
             }
 
-            Debug.LogError($"AssetGraph process , has Error ! bundle:{bundle},asset:{asset},type:{typeof(T)}");
+            Debug.LogError($"AssetGraph process , has Error ! bundle:{bundle},asset:{asset},type:{type}");
             return null;
+        }
+
+        //讀取素材
+        public override AssetBundleLoadAssetOperation LoadAssetAsync<T>(string bundle, string asset) {
+            return LoadAssetAsync(bundle, asset, typeof(T));
         }
 
         public override void Dispose() {
