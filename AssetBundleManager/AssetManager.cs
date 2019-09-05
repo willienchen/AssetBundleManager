@@ -64,6 +64,8 @@ namespace AssetBundles {
         //新增 bundle 變數
         public void RemoveVariant(string variant) => _process.RemoveVariant(variant);
 
+        public string[] GetBundlesWithVariant() => _process.BundlesWithVariant;
+
         //資源釋放
         public void Dispose() {
             _process.Dispose();

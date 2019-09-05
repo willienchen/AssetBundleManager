@@ -14,7 +14,7 @@ namespace AssetBundles {
             abm.SetBaseUri(uris);
             yield return abm.InitializeAsync();
 
-            _bundlesWithVariant = abm.Manifest.GetAllAssetBundlesWithVariant();
+            BundlesWithVariant = abm.Manifest.GetAllAssetBundlesWithVariant();
         }
 
         public override AssetBundleLoadOperation LoadLevelAsync(string bundle, string level, LoadSceneMode mode) => new AssetBundleLoadLevelOperation(RemapVariant(bundle), level, mode, abm);
