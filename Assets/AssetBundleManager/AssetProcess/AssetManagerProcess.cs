@@ -10,7 +10,7 @@ namespace AssetBundles {
 
         public string[] ActiveVariants = { };
 
-        protected string[] _bundlesWithVariant = null;   //初始化時紀錄擁有的bundle
+        public string[] BundlesWithVariant = null;   //初始化時紀錄擁有的bundle
 
         //初始化
         public abstract IEnumerator Initialize(string[] uris);
@@ -45,7 +45,7 @@ namespace AssetBundles {
         public string RemapVariant(string bundle) {
             string[] split = bundle.Split('.');
             if (split.Length > 0)
-                return _bundlesWithVariant.Where(x => x.Contains(split[0])).Where(x => ActiveVariants.Contains(x.Split('.')[1])).FirstOrDefault();
+                return BundlesWithVariant.Where(x => x.Contains(split[0])).Where(x => ActiveVariants.Contains(x.Split('.')[1])).FirstOrDefault();
             return bundle;
         }
     }
