@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace AssetBundles.Simulation {
 
-    public class LoadAssetOperation : AssetBundleLoadAssetBaseOperation {
+    public class LoadAssetOperation : AssetBundleLoadAssetOperation {
 
         Object m_SimulatedObject;
         Sprite[] m_Sprites;

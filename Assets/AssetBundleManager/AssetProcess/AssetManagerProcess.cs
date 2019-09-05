@@ -17,7 +17,7 @@ namespace AssetBundles {
 
         public abstract AssetBundleLoadOperation LoadLevelAsync(string bundle, string level, LoadSceneMode mode);
 
-        public abstract AssetBundleLoadAssetBaseOperation LoadAssetAsync<T>(string bundle, string asset) where T : UnityEngine.Object;
+        public abstract AssetBundleLoadAssetOperation LoadAssetAsync<T>(string bundle, string asset) where T : UnityEngine.Object;
 
         public abstract void Dispose();
 

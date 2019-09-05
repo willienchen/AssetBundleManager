@@ -19,7 +19,7 @@ namespace AssetBundles {
 
         public override AssetBundleLoadOperation LoadLevelAsync(string bundle, string level, LoadSceneMode mode) => new AssetBundleLoadLevelOperation(RemapVariant(bundle), level, mode, abm);
 
-        public override AssetBundleLoadAssetBaseOperation LoadAssetAsync<T>(string bundle, string asset) => new AssetBundleLoadAssetOperation(RemapVariant(bundle), asset, typeof(T), abm);
+        public override AssetBundleLoadAssetOperation LoadAssetAsync<T>(string bundle, string asset) => new LoadAssetOperation(RemapVariant(bundle), asset, typeof(T), abm);
 
         public override void Dispose() {
             abm.Dispose();
