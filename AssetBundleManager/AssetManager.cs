@@ -11,7 +11,7 @@ namespace AssetBundles {
     }
 
     //處理取得資源管理
-    public class AssetManager : MonoBehaviour {
+    public class AssetManager : System.IDisposable {
 
         public static AssetManager instance;
 
@@ -20,13 +20,16 @@ namespace AssetBundles {
 
         private AssetManagerProcess _process;
 
-        //Singleton 
-        private void Awake() {
-            if (instance != null && instance != this) {
-                Destroy(this);
+
+        public AssetManager() {
+            if (instance != null) {
                 return;
             }
             instance = this;
+        }
+
+        ~AssetManager() {
+            instance = null;
         }
 
         public IEnumerator Initialize(string uri, AssetBundleManagerMode mode = AssetBundleManagerMode.Server) {
@@ -62,10 +65,11 @@ namespace AssetBundles {
         public void RemoveVariant(string variant) => _process.RemoveVariant(variant);
 
         //資源釋放
-        void Dispose() {
+        public void Dispose() {
             _process.Dispose();
             _process = null;
             Resources.UnloadUnusedAssets();
+            instance = null;
         }
     }
 }
