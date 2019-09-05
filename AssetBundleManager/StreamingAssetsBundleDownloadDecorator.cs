@@ -83,5 +83,9 @@ namespace AssetBundles
 
             decorated.Handle(cmd);
         }
+
+        public void Dispose () {
+            decorated.Dispose();
+        }
     }
 }

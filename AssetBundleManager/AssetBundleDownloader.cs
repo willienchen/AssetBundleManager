@@ -5,18 +5,15 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace AssetBundles
-{
-    public struct AssetBundleDownloadCommand
-    {
+namespace AssetBundles {
+    public struct AssetBundleDownloadCommand {
         public string BundleName;
         public Hash128 Hash;
         public uint Version;
         public Action<AssetBundle> OnComplete;
     }
 
-    public class AssetBundleDownloader : ICommandHandler<AssetBundleDownloadCommand>
-    {
+    public class AssetBundleDownloader : ICommandHandler<AssetBundleDownloadCommand> {
         private const int MAX_RETRY_COUNT = 3;
         private const float RETRY_WAIT_PERIOD = 1;
         private const int MAX_SIMULTANEOUS_DOWNLOADS = 4;
@@ -38,8 +35,7 @@ namespace AssetBundles
         ///     Creates a new instance of the AssetBundleDownloader.
         /// </summary>
         /// <param name="baseUri">Uri to use as the base for all bundle requests.</param>
-        public AssetBundleDownloader(string baseUri)
-        {
+        public AssetBundleDownloader(string baseUri) {
             this.baseUri = baseUri;
 
 #if UNITY_EDITOR
@@ -54,26 +50,28 @@ namespace AssetBundles
             }
         }
 
+        public void Dispose() {
+            downloadQueue.Clear();
+        }
+
         /// <summary>
         ///     Begin handling of a AssetBundleDownloadCommand object.
         /// </summary>
-        public void Handle(AssetBundleDownloadCommand cmd)
-        {
+        public void Handle(AssetBundleDownloadCommand cmd) {
             InternalHandle(Download(cmd, 0));
         }
 
-        private void InternalHandle(IEnumerator downloadCoroutine)
-        {
+        private void InternalHandle(IEnumerator downloadCoroutine) {
             if (activeDownloads < MAX_SIMULTANEOUS_DOWNLOADS) {
                 activeDownloads++;
                 coroutineHandler(downloadCoroutine);
-            } else {
+            }
+            else {
                 downloadQueue.Enqueue(downloadCoroutine);
             }
         }
 
-        private IEnumerator Download(AssetBundleDownloadCommand cmd, int retryCount)
-        {
+        private IEnumerator Download(AssetBundleDownloadCommand cmd, int retryCount) {
             var uri = baseUri + cmd.BundleName;
             UnityWebRequest req;
             if (cachingDisabled || (cmd.Version <= 0 && cmd.Hash == DEFAULT_HASH)) {
@@ -83,14 +81,16 @@ namespace AssetBundles
 #else
                 req = UnityWebRequest.GetAssetBundle(uri);
 #endif
-            } else if (cmd.Hash == DEFAULT_HASH) {
+            }
+            else if (cmd.Hash == DEFAULT_HASH) {
                 Debug.Log(string.Format("GetAssetBundle [{0}] v[{1}] [{2}].", Caching.IsVersionCached(uri, new Hash128(0, 0, 0, cmd.Version)) ? "cached" : "uncached", cmd.Version, uri));
 #if UNITY_2018_1_OR_NEWER
                 req = UnityWebRequestAssetBundle.GetAssetBundle(uri, cmd.Version, 0);
 #else
                 req = UnityWebRequest.GetAssetBundle(uri, cmd.Version, 0);
 #endif
-            } else {
+            }
+            else {
                 Debug.Log(string.Format("GetAssetBundle [{0}] [{1}] [{2}].", Caching.IsVersionCached(uri, cmd.Hash) ? "cached" : "uncached", uri, cmd.Hash));
 #if UNITY_2018_1_OR_NEWER
                 req = UnityWebRequestAssetBundle.GetAssetBundle(uri, cmd.Hash, 0);
@@ -135,14 +135,16 @@ namespace AssetBundles
             if (isNetworkError) {
                 Debug.LogError(string.Format("Error downloading [{0}]: [{1}]", uri, req.error));
                 bundle = null;
-            } else {
+            }
+            else {
                 bundle = DownloadHandlerAssetBundle.GetContent(req);
             }
 
             if (!isNetworkError && !isHttpError && string.IsNullOrEmpty(req.error) && bundle == null) {
                 if (cachingDisabled) {
                     Debug.LogWarning(string.Format("There was no error downloading [{0}] but the bundle is null.  Caching has already been disabled, not sure there's anything else that can be done.  Returning...", uri));
-                } else {
+                }
+                else {
                     Debug.LogWarning(string.Format("There was no error downloading [{0}] but the bundle is null.  Assuming there's something wrong with the cache folder, retrying with cache disabled now and for future requests...", uri));
                     cachingDisabled = true;
                     req.Dispose();
@@ -155,7 +157,8 @@ namespace AssetBundles
 
             try {
                 cmd.OnComplete(bundle);
-            } finally {
+            }
+            finally {
                 req.Dispose();
 
                 activeDownloads--;

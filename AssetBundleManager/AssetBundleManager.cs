@@ -458,6 +458,9 @@ namespace AssetBundles
         /// </summary>
         public void Dispose()
         {
+            handler.Dispose();
+            AssetBundleDownloaderMonobehaviour.Instance.StopAllCoroutines();
+
             foreach (var cache in activeBundles.Values) {
                 if (cache.AssetBundle != null) {
                     cache.AssetBundle.Unload(true);
