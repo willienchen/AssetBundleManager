@@ -54,7 +54,7 @@ namespace AssetBundles {
             return _process.LoadLevelAsync(bundle, level, isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single);
         }
 
-        public AssetBundleLoadAssetBaseOperation LoadAssetAsync<T>(string bundle, string asset) where T : UnityEngine.Object {
+        public AssetBundleLoadAssetOperation LoadAssetAsync<T>(string bundle, string asset) where T : UnityEngine.Object {
             return _process.LoadAssetAsync<T>(bundle, asset);
         }
 

@@ -21,7 +21,7 @@ namespace AssetBundles {
         }
 
         //讀取素材
-        public override AssetBundleLoadAssetBaseOperation LoadAssetAsync<T>(string bundle, string asset) {
+        public override AssetBundleLoadAssetOperation LoadAssetAsync<T>(string bundle, string asset) {
 
             string[] assetPaths = AssetBundleBuildMap.GetBuildMap().GetAssetPathsFromAssetBundleAndAssetName(RemapVariant(bundle), asset);
 
