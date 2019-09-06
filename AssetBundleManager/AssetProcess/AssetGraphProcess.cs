@@ -46,7 +46,7 @@ namespace AssetBundles {
         }
 
         public override void Dispose() {
-            //Asset Graph 不需要 dispose 
+            BundlesWithVariant = null;
         }
     }
 }
