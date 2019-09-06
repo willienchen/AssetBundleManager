@@ -21,7 +21,11 @@ namespace AssetBundles {
 
         public abstract AssetBundleLoadAssetOperation LoadAssetAsync(string bundle, string asset, System.Type type);
 
+        public virtual AssetBundleLoadOperation PreloadBundle(string bundle) { return null; }
+
         public virtual void UnloadBundle(string bundle, bool unloadAllLoadedObjects, bool force) { }
+
+        protected virtual void UnloadVariantBundle(string variant) { }
 
         public abstract void Dispose();
 
@@ -39,6 +43,19 @@ namespace AssetBundles {
                 variants.Remove(variant);
                 ActiveVariants = variants.ToArray();
             }
+        }
+
+        public void SwitchVariant(string from, string to) {
+            if (ActiveVariants.Contains(from)) {
+                RemoveVariant(from);
+            }
+            else {
+                Debug.LogError("Asset Manager Process : Active variants not include " + to);
+            }
+
+            UnloadVariantBundle(from);
+
+            AddVariant(to);
         }
 
         /// <summary>

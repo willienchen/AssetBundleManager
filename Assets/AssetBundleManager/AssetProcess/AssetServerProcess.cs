@@ -25,9 +25,18 @@ namespace AssetBundles {
 
         public override void UnloadBundle(string bundle, bool unloadAllLoadedObjects, bool force) => abm.UnloadBundle(bundle, unloadAllLoadedObjects, force);
 
+        public override AssetBundleLoadOperation PreloadBundle(string bundle) => new AssetBundlePreLoadOperation(bundle, abm);
+
+        protected override void UnloadVariantBundle(string variant) {
+            abm.UnloadVariantBundle(variant);
+            Resources.UnloadUnusedAssets();
+        }
+
         public override void Dispose() {
+            BundlesWithVariant = null;
             abm.Dispose();
             abm = null;
+
         }
     }
 }
