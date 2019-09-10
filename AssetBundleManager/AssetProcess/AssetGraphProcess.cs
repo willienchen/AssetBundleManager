@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine.AssetGraph;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 namespace AssetBundles {
 
@@ -12,7 +13,8 @@ namespace AssetBundles {
     public class AssetGraphProcess : AssetManagerProcess {
 
         public override IEnumerator Initialize(string[] uris) {
-            BundlesWithVariant = AssetBundleBuildMap.GetBuildMap().GetAllAssetBundleNames();
+            Bundles = AssetBundleBuildMap.GetBuildMap().GetAllAssetBundleNames();
+            BundlesWithVariant = Bundles.Where(x => x.Split('.').Length > 1).ToArray();
             yield break;
         }
 
@@ -38,6 +40,22 @@ namespace AssetBundles {
 
             Debug.LogError($"AssetGraph process , has Error ! bundle:{bundle},asset:{asset},type:{type}");
             return null;
+        }
+
+        /// <summary>
+        /// 將 bundle name 改為正確的 variant , 沒有找到則回傳 傳入值 , AssetGraph 要在這邊另外處理
+        /// </summary>
+        /// <returns>The variant.</returns>
+        /// <param name="bundle">Bundle.</param>
+        public string RemapVariant(string bundle) {
+            string[] split = bundle.Split('.');
+            if (split.Length > 1) {
+                var result = BundlesWithVariant.Where(x => x.Contains(split[0])).Where(x => ActiveVariants.Contains(x.Split('.')[1])).FirstOrDefault();
+                if (!string.IsNullOrEmpty(result)) {
+                    return result;
+                }
+            }
+            return bundle;
         }
 
         //讀取素材

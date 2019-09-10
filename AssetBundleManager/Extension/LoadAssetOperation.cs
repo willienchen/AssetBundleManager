@@ -22,6 +22,8 @@ namespace AssetBundles {
             m_isDone = false;
             m_isError = false;
 
+            //Debug.Log($"Load Asset Operation : bundle path:" + bundle + " , asset name :" + assetName);
+
             manager.GetBundle(bundle, OnAssetBundleComplete);
         }
 
