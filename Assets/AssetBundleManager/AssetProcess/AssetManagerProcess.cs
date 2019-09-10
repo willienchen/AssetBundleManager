@@ -8,9 +8,10 @@ namespace AssetBundles {
 
     public abstract class AssetManagerProcess {
 
-        public string[] ActiveVariants = { };
+        public virtual string[] ActiveVariants { get; set; }
 
-        public string[] BundlesWithVariant = null;   //初始化時紀錄擁有的bundle
+        public string[] BundlesWithVariant = null;   //初始化時 只紀錄 擁有 variant 的 bundle
+        public string[] Bundles = null;             //初始化時記錄所有擁有的bundle
 
         //初始化
         public abstract IEnumerator Initialize(string[] uris);
@@ -46,28 +47,15 @@ namespace AssetBundles {
         }
 
         public void SwitchVariant(string from, string to) {
+            //Debug.Log("enter switch variant , from : " + from + " , to: " + to);
             if (ActiveVariants.Contains(from)) {
                 RemoveVariant(from);
             }
             else {
-                Debug.LogError("Asset Manager Process : Active variants not include " + to);
+                Debug.LogWarning("Asset Manager Process : Active variants not include " + from);
+                UnloadVariantBundle(from);
             }
-
-            UnloadVariantBundle(from);
-
             AddVariant(to);
-        }
-
-        /// <summary>
-        /// 將 bundle name 改為正確的 variant
-        /// </summary>
-        /// <returns>The variant.</returns>
-        /// <param name="bundle">Bundle.</param>
-        public string RemapVariant(string bundle) {
-            string[] split = bundle.Split('.');
-            if (split.Length > 0)
-                return BundlesWithVariant.Where(x => x.Contains(split[0])).Where(x => ActiveVariants.Contains(x.Split('.')[1])).FirstOrDefault();
-            return bundle;
         }
     }
 }

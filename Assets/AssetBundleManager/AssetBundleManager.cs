@@ -46,6 +46,28 @@ namespace AssetBundles {
         private IDictionary<string, DownloadInProgressContainer> downloadsInProgress = new Dictionary<string, DownloadInProgressContainer>(StringComparer.OrdinalIgnoreCase);
         private IDictionary<string, string> unhashedToHashedBundleNameMap = new Dictionary<string, string>(10, StringComparer.OrdinalIgnoreCase);
 
+        #region variant
+        //private string[] variants = { };
+        private string[] bundleWithVariant = null;
+        public string[] Variant = { };
+
+        /// <summary>
+        /// 將 bundle name 改為正確的 variant , 沒有找到則回傳 傳入值
+        /// </summary>
+        /// <returns>The variant.</returns>
+        /// <param name="bundle">Bundle.</param>
+        public string RemapVariant(string bundle) {
+            string[] split = bundle.Split('.');
+            if (split.Length > 1) {
+                var result = bundleWithVariant.Where(x => x.Contains(split[0])).Where(x => Variant.Contains(x.Split('.')[1])).FirstOrDefault();
+                if (!string.IsNullOrEmpty(result)) {
+                    return result;
+                }
+            }
+            return bundle;
+        }
+        #endregion
+
         /// <summary>
         ///     Sets the base uri used for AssetBundle calls.
         /// </summary>
@@ -209,6 +231,7 @@ namespace AssetBundles {
             }
             else {
                 Manifest = manifestBundle.LoadAsset<AssetBundleManifest>("assetbundlemanifest");
+                bundleWithVariant = Manifest.GetAllAssetBundlesWithVariant();
                 PlayerPrefs.SetInt(MANIFEST_PLAYERPREFS_KEY, (int)version);
 
 #if UNITY_2017_1_OR_NEWER
@@ -282,6 +305,8 @@ namespace AssetBundles {
                 onComplete(null);
                 return;
             }
+
+            bundleName = RemapVariant(bundleName);
 
             if (useHash) bundleName = GetHashedBundleName(bundleName);
 
@@ -459,8 +484,10 @@ namespace AssetBundles {
 
         public void UnloadVariantBundle(string variant) {
             var bundles = activeBundles.Where(x => x.Key.EndsWith(variant)).Select(x => x.Value.AssetBundle);
-            foreach (var bundle in bundles) {
-                UnloadBundle(bundle);
+            if (bundles != null) {
+                foreach (var bundle in bundles) {
+                    UnloadBundle(bundle);
+                }
             }
         }
 
