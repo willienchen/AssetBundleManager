@@ -29,13 +29,17 @@ namespace AssetBundles {
 
         public override T GetAsset<T>() => (m_Request != null && m_Request.isDone) ? m_Request.asset as T : null;
 
-        public override T[] GetAssets<T>() => (m_Request != null && m_Request.isDone) ? m_bundle.LoadAssetWithSubAssets<T>(m_AssetName) : null;
+        public override T[] GetAssets<T>() => (m_Request != null && m_Request.isDone && m_bundle != null) ? m_bundle.LoadAssetWithSubAssets<T>(m_AssetName) : null;
 
         //public override Sprite[] GetSprites() => m_bundle != null ? m_bundle.LoadAssetWithSubAssets<Sprite>(m_AssetName) : null;
 
         public override Sprite GetSprite(string spriteName = null) {
             spriteName = spriteName ?? m_AssetName;
-            return GetAssets<UnityEngine.Sprite>().FirstOrDefault(x => x.name == spriteName);
+            Sprite[] sprites = GetAssets<UnityEngine.Sprite>();
+            if (sprites != null) {
+                return sprites.FirstOrDefault(x => x.name == spriteName);
+            }
+            return null;
         }
 
         private void OnAssetBundleComplete(AssetBundle bundle) {

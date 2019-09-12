@@ -47,7 +47,7 @@ namespace AssetBundles {
         }
 
         public void SwitchVariant(string from, string to) {
-            //Debug.Log("enter switch variant , from : " + from + " , to: " + to);
+            Debug.Log("enter switch variant , from : " + from + " , to: " + to);
             if (ActiveVariants.Contains(from)) {
                 RemoveVariant(from);
             }

@@ -31,6 +31,10 @@ namespace AssetBundles
             Application.runInBackground = true; // Http requests respond even if you lose focus
         }
 
+        private void OnApplicationQuit() {
+            instance.StopAllCoroutines();
+        }
+
         private void OnDestroy()
         {
             if (instance == this) {
