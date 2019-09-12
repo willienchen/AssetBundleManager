@@ -356,6 +356,7 @@ namespace AssetBundles {
 
                 for (int i = 0; i < dependenciesToDownload.Count; i++) {
                     var dependencyName = dependenciesToDownload[i];
+                    //Debug.LogColor("dependencise => " + dependencyName, "red");
                     GetBundle(dependencyName, onDependenciesComplete);
                 }
             }
@@ -472,21 +473,19 @@ namespace AssetBundles {
         /// </summary>
         public void Dispose() {
             handler.Dispose();
-            AssetBundleDownloaderMonobehaviour.Instance.StopAllCoroutines();
             foreach (var cache in activeBundles.Values) {
                 if (cache.AssetBundle != null) {
                     cache.AssetBundle.Unload(true);
                 }
             }
-
             activeBundles.Clear();
         }
 
         public void UnloadVariantBundle(string variant) {
-            var bundles = activeBundles.Where(x => x.Key.EndsWith(variant)).Select(x => x.Value.AssetBundle);
+            var bundles = activeBundles.Where(x => x.Key.EndsWith(variant)).Select(x => x.Value.AssetBundle).ToArray();
             if (bundles != null) {
                 foreach (var bundle in bundles) {
-                    UnloadBundle(bundle);
+                    UnloadBundle(bundle.name, false, true);
                 }
             }
         }
@@ -533,7 +532,7 @@ namespace AssetBundles {
                 if (cache.AssetBundle != null) {
                     cache.AssetBundle.Unload(unloadAllLoadedObjects);
                 }
-
+                //Debug.LogColor("really unload bundle --> " + bundleName, "blue");
                 activeBundles.Remove(bundleName);
 
                 for (int i = 0; i < cache.Dependencies.Length; i++) {

@@ -45,6 +45,8 @@ namespace AssetBundles {
 #endif
                 coroutineHandler = AssetBundleDownloaderMonobehaviour.Instance.HandleCoroutine;
 
+
+
             if (!this.baseUri.EndsWith("/")) {
                 this.baseUri += "/";
             }
