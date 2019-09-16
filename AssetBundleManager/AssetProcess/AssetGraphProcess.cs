@@ -13,6 +13,7 @@ namespace AssetBundles {
     public class AssetGraphProcess : AssetManagerProcess {
 
         public override IEnumerator Initialize(string[] uris) {
+            ActiveVariants = new string[] { };
             Bundles = AssetBundleBuildMap.GetBuildMap().GetAllAssetBundleNames();
             BundlesWithVariant = Bundles.Where(x => x.Split('.').Length > 1).ToArray();
             yield break;
