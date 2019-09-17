@@ -43,18 +43,20 @@ namespace AssetBundles {
                 List<string> variants = ActiveVariants.ToList();
                 variants.Remove(variant);
                 ActiveVariants = variants.ToArray();
+
+                UnloadVariantBundle(variant);
             }
         }
 
         public void SwitchVariant(string from, string to) {
-            Debug.Log("enter switch variant , from : " + from + " , to: " + to);
+            //Debug.Log("enter switch variant , from : " + from + " , to: " + to);
             if (ActiveVariants.Contains(from)) {
                 RemoveVariant(from);
             }
-            else {
-                Debug.LogWarning("Asset Manager Process : Active variants not include " + from);
-                UnloadVariantBundle(from);
-            }
+            //else {
+            //    Debug.LogWarning("Asset Manager Process : Active variants not include " + from);
+            //    UnloadVariantBundle(from);
+            //}
             AddVariant(to);
         }
     }

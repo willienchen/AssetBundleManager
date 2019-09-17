@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using System.Collections;
 using UnityEditor;
 using Settings = AssetBundles.DataModel.Settings;
@@ -39,3 +40,4 @@ namespace AssetBundles.Dev {
         }
     }
 }
+#endif

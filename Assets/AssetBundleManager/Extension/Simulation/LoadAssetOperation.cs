@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using System.Collections;
 using System.Linq;
 
@@ -34,3 +35,4 @@ namespace AssetBundles.Simulation {
         }
     }
 }
+#endif

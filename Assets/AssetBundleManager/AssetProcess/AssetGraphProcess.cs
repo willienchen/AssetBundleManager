@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,11 +25,20 @@ namespace AssetBundles {
         }
 
         public override AssetBundleLoadAssetOperation LoadAssetAsync(string bundle, string asset, System.Type type) {
+            var split = asset.Split('.');
+            if (split.Length > 1) {
+                asset = split[0];
+            }
+
             string[] assetPaths = AssetBundleBuildMap.GetBuildMap().GetAssetPathsFromAssetBundleAndAssetName(RemapVariant(bundle), asset);
 
             if (assetPaths.Length == 0) {
-                Debug.LogError($"AssetGraph process ,There is no asset with name \"{asset}\" in {bundle}");
+                Debug.LogError($"AssetGraph process ,There is no asset with name \"{asset}\" in {RemapVariant(bundle)} , {type}");
                 return null;
+            }
+
+            if (type.Equals(typeof(Sprite[]))) {
+                type = typeof(Sprite);
             }
 
             Object target;
@@ -39,7 +49,7 @@ namespace AssetBundles {
                 }
             }
 
-            Debug.LogError($"AssetGraph process , has Error ! bundle:{bundle},asset:{asset},type:{type}");
+            Debug.LogError($"AssetGraph process , has Error ! bundle:{bundle} ,asset:{asset} ,type:{type}");
             return null;
         }
 
@@ -69,3 +79,4 @@ namespace AssetBundles {
         }
     }
 }
+#endif
