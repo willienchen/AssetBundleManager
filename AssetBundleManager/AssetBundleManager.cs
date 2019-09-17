@@ -482,10 +482,11 @@ namespace AssetBundles {
         }
 
         public void UnloadVariantBundle(string variant) {
+
             var bundles = activeBundles.Where(x => x.Key.EndsWith(variant)).Select(x => x.Value.AssetBundle).ToArray();
             if (bundles != null) {
-                foreach (var bundle in bundles) {
-                    UnloadBundle(bundle.name, false, true);
+                foreach (AssetBundle bundle in bundles) {
+                    UnloadBundle(bundle);
                 }
             }
         }

@@ -1,13 +1,12 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.IO;
 using System.Linq;
-
-#if UNITY_EDITOR
 using UnityEditor;
-#endif
+
 
 namespace AssetBundles.DataModel {
     public partial class Settings : ScriptableObject {
@@ -26,3 +25,4 @@ namespace AssetBundles.DataModel {
         }
     }
 }
+#endif

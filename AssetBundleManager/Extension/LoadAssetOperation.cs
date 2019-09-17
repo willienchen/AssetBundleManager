@@ -29,7 +29,16 @@ namespace AssetBundles {
 
         public override T GetAsset<T>() => (m_Request != null && m_Request.isDone) ? m_Request.asset as T : null;
 
-        public override T[] GetAssets<T>() => (m_Request != null && m_Request.isDone && m_bundle != null) ? m_bundle.LoadAssetWithSubAssets<T>(m_AssetName) : null;
+        public override T[] GetAssets<T>()  {
+
+            if (m_AssetName == "Btn_Control") {
+                if (m_bundle == null) {
+                    Debug.Log("all ? " + m_Request);
+                }
+            }
+
+            return (m_Request != null && m_Request.isDone && m_bundle != null) ? m_bundle.LoadAssetWithSubAssets<T>(m_AssetName) : null;
+        }
 
         //public override Sprite[] GetSprites() => m_bundle != null ? m_bundle.LoadAssetWithSubAssets<Sprite>(m_AssetName) : null;
 

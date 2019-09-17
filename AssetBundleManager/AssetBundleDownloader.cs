@@ -93,7 +93,7 @@ namespace AssetBundles {
 #endif
             }
             else {
-                Debug.Log(string.Format("GetAssetBundle [{0}] [{1}] [{2}].", Caching.IsVersionCached(uri, cmd.Hash) ? "cached" : "uncached", uri, cmd.Hash));
+                //Debug.Log(string.Format("GetAssetBundle [{0}] [{1}] [{2}].", Caching.IsVersionCached(uri, cmd.Hash) ? "cached" : "uncached", uri, cmd.Hash));
 #if UNITY_2018_1_OR_NEWER
                 req = UnityWebRequestAssetBundle.GetAssetBundle(uri, cmd.Hash, 0);
 #else

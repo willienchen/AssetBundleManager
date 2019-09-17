@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEngine;
 using UnityEditor;
 
 namespace AssetBundles.Dev {
@@ -34,3 +35,4 @@ namespace AssetBundles.Dev {
         protected abstract string GetLabel();
     }
 }
+#endif
