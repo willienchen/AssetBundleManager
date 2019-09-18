@@ -15,7 +15,11 @@ We felt the AssetBundleManager provided by Unity was complicated and out-dated..
 - Under `dependencies` add following line:
 
 ```json
-"asset-bundle-manager": "https://github.com/SadPandaStudios/AssetBundleManager.git#upm",
+"asset-bundle-manager": "https://github.com/willienchen/AssetBundleManager.git#upm-test",
+```
+
+```json
+"asset-bundle-manager": "https://github.com/willienchen/AssetBundleManager.git#upm",
 ```
 
 - Refresh your project in Unity,
