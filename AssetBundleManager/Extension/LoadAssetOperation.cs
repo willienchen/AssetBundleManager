@@ -4,72 +4,75 @@ using System.Linq;
 
 namespace AssetBundles {
 
-    public class LoadAssetOperation : AssetBundleLoadAssetOperation {
-
-        protected string m_AssetBundleName;
-        protected string m_AssetName;
-        protected bool m_isError = false;
-        protected System.Type m_Type;
-        protected AssetBundleRequest m_Request = null;
+    public class LoadAssetOperation : AssetBundleOperation, ILoadAssetOperation {
+        protected string _assetName;
+        protected System.Type _type;
+        protected new AssetBundleRequest _request = null;
 
         protected bool m_isDone;
-        protected AssetBundle m_bundle;
+        protected AssetBundle _bundle;
+        protected AssetBundleManager _abm;
 
-        public LoadAssetOperation(string bundle, string assetName, System.Type type, AssetBundleManager manager) {
-            m_AssetBundleName = bundle;
-            m_AssetName = assetName;
-            m_Type = type;
-            m_isDone = false;
-            m_isError = false;
-
+        public LoadAssetOperation(string bundle, string assetName, System.Type type, AssetBundleManager manager) : base(bundle, manager) {
+            _bundleName = bundle;
+            _assetName = assetName;
+            _type = type;
+            _abm = manager;
             //Debug.Log($"Load Asset Operation : bundle path:" + bundle + " , asset name :" + assetName);
-
-            manager.GetBundle(bundle, OnAssetBundleComplete);
+            GetBundle();
         }
 
-        public override T GetAsset<T>() => (m_Request != null && m_Request.isDone) ? m_Request.asset as T : null;
+        protected override AsyncOperation GenerateRequest() => _request = _assetBundle.LoadAssetAsync(_assetName, _type);
 
-        public override T[] GetAssets<T>()  {
 
-            if (m_AssetName == "Btn_Control") {
-                if (m_bundle == null) {
-                    Debug.Log("all ? " + m_Request);
-                }
-            }
+        public T GetAsset<T>() where T : UnityEngine.Object => (_request != null && _request.isDone) ? _request.asset as T : null;
 
-            return (m_Request != null && m_Request.isDone && m_bundle != null) ? m_bundle.LoadAssetWithSubAssets<T>(m_AssetName) : null;
-        }
+
+        //public override T[] GetAssets<T>() {
+        //    return (_request != null && _request.isDone && _bundle != null) ? _bundle.LoadAssetWithSubAssets<T>(_assetName) : null;
+        //}
 
         //public override Sprite[] GetSprites() => m_bundle != null ? m_bundle.LoadAssetWithSubAssets<Sprite>(m_AssetName) : null;
 
-        public override Sprite GetSprite(string spriteName = null) {
-            spriteName = spriteName ?? m_AssetName;
-            Sprite[] sprites = GetAssets<UnityEngine.Sprite>();
-            if (sprites != null) {
-                return sprites.FirstOrDefault(x => x.name == spriteName);
-            }
-            return null;
-        }
+        //public override Sprite GetSprite(string spriteName = null) {
+        //    spriteName = spriteName ?? _assetName;
+        //    Sprite[] sprites = GetAssets<UnityEngine.Sprite>();
+        //    if (sprites != null) {
+        //        return sprites.FirstOrDefault(x => x.name == spriteName);
+        //    }
+        //    return null;
+        //}
 
-        private void OnAssetBundleComplete(AssetBundle bundle) {
-            m_bundle = bundle;
+        //private void OnAssetBundleComplete(AssetBundle bundle) {
+        //    _bundle = bundle;
 
-            if (bundle != null) {
-                ///@TODO: When asset bundle download fails this throws an exception...
-                if (string.IsNullOrEmpty(m_AssetName)) {
-                    Debug.LogError("AssetName is null " + m_AssetName);
-                    m_isError = true;
-                    return;
-                }
-                m_Request = bundle.LoadAssetAsync(m_AssetName, m_Type);
-            }
-            else {
-                m_isError = true;
-            }
-        }
+        //    if (bundle != null) {
+        //        ///@TODO: When asset bundle download fails this throws an exception...
+        //        if (string.IsNullOrEmpty(_assetName)) {
+        //            Debug.LogError("AssetName is null " + _assetName);
+        //            _isError = true;
+        //            return;
+        //        }
+        //        _request = bundle.LoadAssetAsync(_assetName, _type);
+        //    }
+        //    else {
+        //        _isError = true;
+        //    }
+        //}
 
-        public override bool IsDone() => (m_Request == null && m_isError) ? true : m_Request != null && m_Request.isDone;
+        //public override bool IsDone() {
+        //    if (_isError)
+        //        return true;
+        //    else if (_request != null) {
+        //        if (_request.isDone && _bundle != null) {
+        //            _abm.UnloadBundle(_bundle);
+        //            _bundle = null;
+        //        }
+        //        return _request.isDone;
+        //    }
+        //    return (_request == null && _isError) ? true : _request != null && _request.isDone;
+        //}
 
-        public override bool IsError() => m_isError;
+        //public override bool IsError() => _isError;
     }
 }

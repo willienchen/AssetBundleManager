@@ -482,7 +482,6 @@ namespace AssetBundles {
         }
 
         public void UnloadVariantBundle(string variant) {
-
             var bundles = activeBundles.Where(x => x.Key.EndsWith(variant)).Select(x => x.Value.AssetBundle).ToArray();
             if (bundles != null) {
                 foreach (AssetBundle bundle in bundles) {
@@ -531,15 +530,19 @@ namespace AssetBundles {
 
             if (force || --cache.References <= 0) {
                 if (cache.AssetBundle != null) {
+                    //Debug.LogColor("Unload Bundle :" + cache.AssetBundle, "red");
                     cache.AssetBundle.Unload(unloadAllLoadedObjects);
                 }
-                //Debug.LogColor("really unload bundle --> " + bundleName, "blue");
+
                 activeBundles.Remove(bundleName);
 
                 for (int i = 0; i < cache.Dependencies.Length; i++) {
-                    UnloadBundle(cache.Dependencies[i], unloadAllLoadedObjects, force);
+                    UnloadBundle(RemapVariant(cache.Dependencies[i]), unloadAllLoadedObjects, force);
                 }
             }
+            //else {
+            //    Debug.Log(bundleName + " ---> " + cache.References);
+            //}
         }
 
         /// <summary>

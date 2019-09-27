@@ -18,9 +18,15 @@ namespace AssetBundles {
 
         public abstract AssetBundleLoadOperation LoadLevelAsync(string bundle, string level, LoadSceneMode mode);
 
-        public abstract AssetBundleLoadAssetOperation LoadAssetAsync<T>(string bundle, string asset) where T : UnityEngine.Object;
+        public abstract ILoadAssetOperation LoadAssetAsync<T>(string bundle, string asset) where T : UnityEngine.Object;
 
-        public abstract AssetBundleLoadAssetOperation LoadAssetAsync(string bundle, string asset, System.Type type);
+        public abstract ILoadAssetOperation LoadAssetAsync(string bundle, string asset, System.Type type);
+
+        public abstract ILoadMultiAssetOperation LoadAllAssetsAsync(string bundle);
+
+        public abstract ILoadMultiAssetOperation LoadAssetWithSubAssetsAsync(string bundle, string asset, System.Type type);
+
+        public abstract ILoadMultiAssetOperation LoadMultiAssetOperation(string bundle, string[] asset, System.Type type);
 
         public virtual AssetBundleLoadOperation PreloadBundle(string bundle) { return null; }
 
@@ -49,7 +55,6 @@ namespace AssetBundles {
         }
 
         public void SwitchVariant(string from, string to) {
-            //Debug.Log("enter switch variant , from : " + from + " , to: " + to);
             if (ActiveVariants.Contains(from)) {
                 RemoveVariant(from);
             }
@@ -59,5 +64,8 @@ namespace AssetBundles {
             //}
             AddVariant(to);
         }
+
+        public abstract bool IsCaching(string bundle, string variant = "");
+
     }
 }

@@ -14,10 +14,14 @@ namespace AssetBundles {
 
         public bool MoveNext() => !IsDone();
 
-        public void Reset() { }
+        public virtual void Reset() {
+            _isError = false;
+        }
 
         abstract public bool IsDone();
 
         abstract public bool IsError();
+
+        protected bool _isError;
     }
 }

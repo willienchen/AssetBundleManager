@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using UnityEngine.AssetGraph;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using System;
 
 namespace AssetBundles {
 
@@ -24,7 +25,7 @@ namespace AssetBundles {
             return new Simulation.LoadLevelOperation(RemapVariant(bundle), level, mode);
         }
 
-        public override AssetBundleLoadAssetOperation LoadAssetAsync(string bundle, string asset, System.Type type) {
+        public override ILoadAssetOperation LoadAssetAsync(string bundle, string asset, System.Type type) {
             var split = asset.Split('.');
             if (split.Length > 1) {
                 asset = split[0];
@@ -41,7 +42,7 @@ namespace AssetBundles {
                 type = typeof(Sprite);
             }
 
-            Object target;
+            UnityEngine.Object target;
             for (int i = 0; i < assetPaths.Length; i++) {
                 target = AssetDatabase.LoadAssetAtPath(assetPaths[i], type);
                 if (target != null) {
@@ -51,6 +52,19 @@ namespace AssetBundles {
 
             Debug.LogError($"AssetGraph process , has Error ! bundle:{bundle} ,asset:{asset} ,type:{type}");
             return null;
+        }
+
+        public override ILoadMultiAssetOperation LoadAllAssetsAsync(string bundle) {
+            string[] assetPaths = AssetBundleBuildMap.GetBuildMap().GetAssetPathsFromAssetBundle(bundle);
+            return new Simulation.LoadMultiAssetOperation(assetPaths);
+        }
+
+        public override ILoadMultiAssetOperation LoadAssetWithSubAssetsAsync(string bundle, string asset, System.Type type) {
+            return LoadAssetAsync(bundle, asset, type) as ILoadMultiAssetOperation;
+        }
+
+        public override ILoadMultiAssetOperation LoadMultiAssetOperation(string bundle, string[] asset, Type type) {
+            return LoadAllAssetsAsync(bundle);
         }
 
         /// <summary>
@@ -70,9 +84,11 @@ namespace AssetBundles {
         }
 
         //讀取素材
-        public override AssetBundleLoadAssetOperation LoadAssetAsync<T>(string bundle, string asset) {
+        public override ILoadAssetOperation LoadAssetAsync<T>(string bundle, string asset) {
             return LoadAssetAsync(bundle, asset, typeof(T));
         }
+
+        public override bool IsCaching(string bundle, string variant = "") => true;
 
         public override void Dispose() {
             BundlesWithVariant = null;
