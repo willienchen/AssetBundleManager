@@ -42,9 +42,9 @@ namespace AssetBundles {
                 return true;
 
             if (_request != null) {
-                //if (_request.isDone) {
-                //    UnloadBundle();
-                //}
+                if (_request.isDone && !AssetManagerProcess.KeepBundle) {
+                    UnloadBundle();
+                }
                 return _request.isDone;
             }
 

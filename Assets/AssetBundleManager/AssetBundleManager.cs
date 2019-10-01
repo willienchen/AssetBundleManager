@@ -485,7 +485,7 @@ namespace AssetBundles {
             var bundles = activeBundles.Where(x => x.Key.EndsWith(variant)).Select(x => x.Value.AssetBundle).ToArray();
             if (bundles != null) {
                 foreach (AssetBundle bundle in bundles) {
-                    UnloadBundle(bundle);
+                    UnloadBundle(bundle.name, false, true);
                 }
             }
         }
@@ -530,8 +530,10 @@ namespace AssetBundles {
 
             if (force || --cache.References <= 0) {
                 if (cache.AssetBundle != null) {
-                    //Debug.LogColor("Unload Bundle :" + cache.AssetBundle, "red");
                     cache.AssetBundle.Unload(unloadAllLoadedObjects);
+#if DEBUG_BUNDLE
+                    Debug.LogFormat("<color=red>Unload bundle : {0} </color>", bundleName);
+#endif
                 }
 
                 activeBundles.Remove(bundleName);
