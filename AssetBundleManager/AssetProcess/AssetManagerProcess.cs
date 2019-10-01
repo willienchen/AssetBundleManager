@@ -8,6 +8,12 @@ namespace AssetBundles {
 
     public abstract class AssetManagerProcess {
 
+        /// <summary>
+        /// true : 素材讀取完畢 不 UnloadBundle    
+        /// <para>false : 素材讀取完畢 UnloadBundle</para>  
+        /// </summary>
+        public static bool KeepBundle = false;
+
         public virtual string[] ActiveVariants { get; set; }
 
         public string[] BundlesWithVariant = null;   //初始化時 只紀錄 擁有 variant 的 bundle
@@ -49,7 +55,6 @@ namespace AssetBundles {
                 List<string> variants = ActiveVariants.ToList();
                 variants.Remove(variant);
                 ActiveVariants = variants.ToArray();
-
                 UnloadVariantBundle(variant);
             }
         }
