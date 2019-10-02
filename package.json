@@ -8,5 +8,10 @@
         "unity",
 		"bundle"		
     ],
-    "category": "Instrument"
+    "category": "Instrument",
+    "dependencies": {
+        "com.unity.assetgraph": "https://github.com/unity3d-jp/AssetGraph.git",
+        "com.unity.assetbundlebrowser" : "1.6.0",
+        "com.unity.addressables" : "1.1.7"
+    }
 }
